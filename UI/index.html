@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People Skills App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>People Skills App</h1>
+
+    <div class="form-container">
+        <h2>Admin Login</h2>
+        <label for="adminUsername">Username:</label>
+        <input type="text" id="adminUsername" placeholder="Enter admin username">
+    
+        <label for="adminPassword">Password:</label>
+        <input type="password" id="adminPassword" placeholder="Enter password">
+    
+        <button onclick="adminLogin()">Login</button>
+    
+        <div id="loginMessage"></div>
+    </div>
+
+    <div class="form-container" id="adminSkillForm" style="display: none;">
+        <h2>Add New Skill (Admin Only)</h2>
+        <label for="newSkillName">Skill Name:</label>
+        <input type="text" id="newSkillName" placeholder="Enter skill name">
+    
+        <button onclick="addSkill()">Add Skill</button>
+    </div>
+
+    <!-- Form to Add a New Person -->
+    <div class="form-container">
+        <h2>Register New Person</h2>
+        <label for="regName">Name:</label>
+        <input type="text" id="regName" placeholder="Enter name">
+    
+        <label for="regWorkplace">Workplace ID:</label>
+        <input type="number" id="regWorkplace" placeholder="Enter workplace ID">
+    
+        <label>Select Skills:</label>
+        <div id="skillCheckboxes">
+            <!-- Checkboxes will be populated dynamically -->
+        </div>
+    
+        <button onclick="registerPerson()">Register</button>
+    </div>
+
+    <!-- Form to Update an Existing Person -->
+    <div class="form-container">
+        <h2>Update Person</h2>
+        <label for="updateId">Person ID:</label>
+        <input type="number" id="updateId" placeholder="Enter person ID">
+
+        <label for="updateName">Name:</label>
+        <input type="text" id="updateName" placeholder="Enter name">
+
+        <label for="updateWorkplace">Workplace ID:</label>
+        <input type="number" id="updateWorkplace" placeholder="Enter workplace ID">
+
+        <label for="updateSkills">Skill IDs (comma separated):</label>
+        <input type="text" id="updateSkills" placeholder="e.g., 1, 2, 3">
+
+        <button onclick="updatePerson()">Update Person</button>
+    </div>
+
+    <!-- Form to Search a Person by Skill -->
+    <div class="form-container">
+        <h2>Search Person by Skill</h2>
+        <label for="searchSkill">Skill Name:</label>
+        <input type="text" id="searchSkill" placeholder="Enter skill name">
+
+        <button onclick="searchPerson()">Search</button>
+
+        <div id="searchResults"></div>
+    </div>
+
+    <!-- Form to Search for the most people with a specific skill -->
+    <div class="form-container">
+        <h2>Search Workplace by the Most People With a Specific Skill</h2>
+        <label for="searchWorkplaceSkill">Skill Name:</label>
+        <input type="text" id="searchWorkplaceSkill" placeholder="Enter skill name">
+
+        <button onclick="searchWorkplace()">Search</button>
+    
+        <div id="workplaceResults"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

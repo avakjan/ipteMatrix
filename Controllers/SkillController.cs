@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PeopleSkillsApp.Models;
@@ -38,6 +39,7 @@ namespace PeopleSkillsApp.Controllers
 
         // POST: api/Skill
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Skill>> CreateSkill([FromBody] Skill skill)
         {
             _context.Skills.Add(skill);

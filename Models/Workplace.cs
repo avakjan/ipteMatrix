@@ -8,6 +8,6 @@ namespace PeopleSkillsApp.Models
         public string Name { get; set; }
 
         [JsonIgnore] // Prevents looping in the response
-        public List<Person> Persons { get; set; }
+        public List<Person>? Persons { get; set; }
     }
 }

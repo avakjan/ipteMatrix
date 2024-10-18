@@ -89,9 +89,9 @@ namespace PeopleSkillsApp.Controllers
 
         // POST: api/Person
         [HttpPost]
-        public async Task<ActionResult<Person>> CreatePerson([FromBody] Person person, [FromQuery] List<int> skillIds)
+        public async Task<ActionResult<object>> CreatePerson([FromBody] Person person)
         {
-            if (person == null || skillIds == null || skillIds.Count == 0)
+            if (person == null || person.SkillIds == null || person.SkillIds.Count == 0)
             {
                 return BadRequest("Invalid person or skills data.");
             }
@@ -101,45 +101,78 @@ namespace PeopleSkillsApp.Controllers
             await _context.SaveChangesAsync();
 
             // Associate the person with their skills
-            foreach (var skillId in skillIds)
+            foreach (var skillId in person.SkillIds)
             {
                 _context.PersonSkills.Add(new PersonSkill { PersonId = person.Id, SkillId = skillId });
             }
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPerson), new { id = person.Id }, person);
+            // Fetch the workplace name and skill names
+            var workplace = await _context.Workplaces.FindAsync(person.WorkplaceId);
+            var skillNames = await _context.Skills
+                                        .Where(s => person.SkillIds.Contains(s.Id))
+                                        .Select(s => s.Name)
+                                        .ToListAsync();
+
+            // Return a customized response
+            var response = new
+            {
+                Id = person.Id,
+                Name = person.Name,
+                Workplace = workplace.Name,  // Workplace name
+                Skills = skillNames          // List of skill names
+            };
+
+            return CreatedAtAction(nameof(GetPerson), new { id = person.Id }, response);
         }
+
+
 
 
 
 
         // PUT: api/Person/1
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePerson(int id, [FromBody] Person updatedPerson)
+        public async Task<IActionResult> UpdatePerson(int id, [FromBody] Person person)
         {
-            if (id != updatedPerson.Id)
+            if (person == null)
             {
-                return BadRequest();
+                return BadRequest("Invalid person data.");
             }
 
-            _context.Entry(updatedPerson).State = EntityState.Modified;
+            var existingPerson = await _context.Persons
+                                            .Include(p => p.PersonSkills)
+                                            .FirstOrDefaultAsync(p => p.Id == id);
 
-            try
+            if (existingPerson == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+
+            // Update person details
+            existingPerson.Name = person.Name;
+            existingPerson.WorkplaceId = person.WorkplaceId;
+
+            // Update skills if provided
+            if (person.SkillIds != null && person.SkillIds.Count > 0)
             {
-                if (!_context.Persons.Any(p => p.Id == id))
+                // Remove existing skills
+                _context.PersonSkills.RemoveRange(existingPerson.PersonSkills);
+
+                // Add new skills
+                foreach (var skillId in person.SkillIds)
                 {
-                    return NotFound();
+                    existingPerson.PersonSkills.Add(new PersonSkill { PersonId = existingPerson.Id, SkillId = skillId });
                 }
-                throw;
             }
 
-            return NoContent();
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // Return 204 - No Content for successful update
         }
+
+
 
         // DELETE: api/Person/1
         [HttpDelete("{id}")]

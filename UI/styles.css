@@ -1,0 +1,48 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.form-container {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #45a049;
+}
+#skillCheckboxes{
+    display: flex;
+    justify-content: space-around;
+}
+#skillCheckboxes div {
+    display: flex;
+    margin-bottom: 10px;
+    flex-direction: column;
+    cursor: pointer;
+}
+#skillCheckboxes :hover{
+    cursor: pointer;
+}
