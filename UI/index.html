@@ -12,12 +12,17 @@
 
     <div class="form-container">
         <h2>Admin Login</h2>
-        <label for="adminUsername">Username:</label>
-        <input type="text" id="adminUsername" placeholder="Enter admin username">
+        <div class="login-inputs">
+            <div>
+                <label for="adminUsername">Username:</label>
+                <input type="text" id="adminUsername" placeholder="Enter admin username">
+            </div>
     
-        <label for="adminPassword">Password:</label>
-        <input type="password" id="adminPassword" placeholder="Enter password">
-    
+            <div>
+                <label for="adminPassword">Password:</label>
+                <input type="password" id="adminPassword" placeholder="Enter password">
+            </div>
+        </div>
         <button onclick="adminLogin()">Login</button>
     
         <div id="loginMessage"></div>
@@ -31,40 +36,77 @@
         <button onclick="addSkill()">Add Skill</button>
     </div>
 
+    <div class="form-container" id="adminWorkplaceForm" style="display: none;">
+        <h2>Add New Workplace (Admin Only)</h2>
+        <label for="newWorkplaceName">Workplace Name:</label>
+        <input type="text" id="newWorkplaceName" placeholder="Enter workplace name">
+    
+        <button onclick="addWorkplace()">Add Workplace</button>
+    </div>
+
     <!-- Form to Add a New Person -->
     <div class="form-container">
         <h2>Register New Person</h2>
-        <label for="regName">Name:</label>
-        <input type="text" id="regName" placeholder="Enter name">
-    
-        <label for="regWorkplace">Workplace ID:</label>
-        <input type="number" id="regWorkplace" placeholder="Enter workplace ID">
-    
-        <label>Select Skills:</label>
-        <div id="skillCheckboxes">
-            <!-- Checkboxes will be populated dynamically -->
+        <div class="register-person">
+            <div>
+                <label for="regName">Name:</label>
+                <input type="text" id="regName" placeholder="Enter name">   
+            </div>
+            <div>
+                <label for="regWorkplace">Workplace:</label>
+                <select id="regWorkplace">
+                    <!-- Workplaces will be populated dynamically -->
+                </select>
+            </div>
+            <div>
+                <label>Select Skills:</label>
+                <div id="skillCheckboxes">
+                    <!-- Checkboxes will be populated dynamically -->
+                </div>
+            </div>
+
         </div>
     
         <button onclick="registerPerson()">Register</button>
     </div>
+    
 
     <!-- Form to Update an Existing Person -->
     <div class="form-container">
         <h2>Update Person</h2>
-        <label for="updateId">Person ID:</label>
-        <input type="number" id="updateId" placeholder="Enter person ID">
-
-        <label for="updateName">Name:</label>
-        <input type="text" id="updateName" placeholder="Enter name">
-
-        <label for="updateWorkplace">Workplace ID:</label>
-        <input type="number" id="updateWorkplace" placeholder="Enter workplace ID">
-
-        <label for="updateSkills">Skill IDs (comma separated):</label>
-        <input type="text" id="updateSkills" placeholder="e.g., 1, 2, 3">
-
+        <div class="update-person">
+            <!-- Step 1: Select a person by name -->
+            <div>
+                <label for="updatePersonSelect">Select Person:</label>
+                <select id="updatePersonSelect" onchange="loadPersonDetails()">
+                    <!-- Persons will be populated dynamically -->
+                </select>
+            </div>
+    
+            <!-- Step 2: Show selected person's details -->
+            <div>
+                <label for="updateName">Name:</label>
+                <input type="text" id="updateName" placeholder="Enter name" disabled>
+            </div>
+    
+            <div>
+                <label for="updateWorkplace">Workplace:</label>
+                <select id="updateWorkplace">
+                    <!-- Workplaces will be populated dynamically -->
+                </select>
+            </div>
+    
+            <div>
+                <label>Select Skills:</label>
+                <div id="updateSkillCheckboxes">
+                    <!-- Checkboxes with skill levels will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    
         <button onclick="updatePerson()">Update Person</button>
     </div>
+    
 
     <!-- Form to Search a Person by Skill -->
     <div class="form-container">

@@ -336,3 +336,5 @@ C:\Users\German\Desktop\ipteMatrix\obj\Debug\net8.0\PeopleSkillsApp.pdb
 C:\Users\German\Desktop\ipteMatrix\obj\Debug\net8.0\PeopleSkillsApp.genruntimeconfig.cache
 C:\Users\German\Desktop\ipteMatrix\obj\Debug\net8.0\ref\PeopleSkillsApp.dll
 C:\Users\German\Desktop\ipteMatrix\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\avakj\Desktop\IPTEMatrix\PeopleSkillsApp\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\avakj\Desktop\IPTEMatrix\PeopleSkillsApp\obj\Debug\net8.0\PeopleSkillsApp.sourcelink.json

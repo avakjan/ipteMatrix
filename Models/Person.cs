@@ -9,15 +9,24 @@ namespace PeopleSkillsApp.Models
         public string Name { get; set; }
         public int WorkplaceId { get; set; }
 
-        // Navigation properties
+        
         [JsonIgnore]
         public Workplace? Workplace { get; set; }
 
         [JsonIgnore]
         public List<PersonSkill>? PersonSkills { get; set; }
 
-        // New property for creating the person with skills
-        [NotMapped] // This tells EF Core to ignore this property when mapping to the database
-        public List<int>? SkillIds { get; set; }
+        
+        [NotMapped] 
+        public List<SkillLevelDto>? SkillLevels { get; set; }
+
     }
+
+
+    public class SkillLevelDto
+    {
+        public int SkillId { get; set; }
+        public int Level { get; set; }
+    }
+
 }

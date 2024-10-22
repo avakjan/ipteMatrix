@@ -28,7 +28,8 @@ namespace PeopleSkillsApp.Controllers
                                             p.Id,
                                             p.Name,
                                             Workplace = p.Workplace.Name,
-                                            Skills = p.PersonSkills.Select(ps => ps.Skill.Name).ToList()
+                                            Skills = p.PersonSkills.Select(ps => ps.Skill.Name).ToList(),
+                                            Levels = p.PersonSkills.Select(ps => ps.Level).ToList()
                                         })
                                         .ToListAsync();
 
@@ -48,7 +49,8 @@ namespace PeopleSkillsApp.Controllers
                                         p.Id,
                                         p.Name,
                                         Workplace = p.Workplace.Name,  // Include the workplace name
-                                        Skills = p.PersonSkills.Select(ps => ps.Skill.Name).ToList()  // List of skill names
+                                        Skills = p.PersonSkills.Select(ps => ps.Skill.Name).ToList(),  // List of skill names
+                                        Levels = p.PersonSkills.Select(ps => ps.Level).ToList()  // List of skill levels
                                     })
                                     .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -88,43 +90,37 @@ namespace PeopleSkillsApp.Controllers
 
 
         // POST: api/Person
-        [HttpPost]
-        public async Task<ActionResult<object>> CreatePerson([FromBody] Person person)
+        [HttpPost("add")]
+        public IActionResult AddPerson([FromBody] Person person)
         {
-            if (person == null || person.SkillIds == null || person.SkillIds.Count == 0)
+            // Validate the incoming person object
+            if (person == null || person.SkillLevels == null || person.SkillLevels.Count == 0)
             {
                 return BadRequest("Invalid person or skills data.");
             }
 
-            // Add the person to the database
-            _context.Persons.Add(person);
-            await _context.SaveChangesAsync();
-
-            // Associate the person with their skills
-            foreach (var skillId in person.SkillIds)
+            // Validate that skill levels are within the range of 1 to 5
+            foreach (var skillLevel in person.SkillLevels)
             {
-                _context.PersonSkills.Add(new PersonSkill { PersonId = person.Id, SkillId = skillId });
+                if (skillLevel.Level < 1 || skillLevel.Level > 5)
+                {
+                    return BadRequest($"Skill level for SkillId {skillLevel.SkillId} must be between 1 and 5.");
+                }
             }
 
-            await _context.SaveChangesAsync();
-
-            // Fetch the workplace name and skill names
-            var workplace = await _context.Workplaces.FindAsync(person.WorkplaceId);
-            var skillNames = await _context.Skills
-                                        .Where(s => person.SkillIds.Contains(s.Id))
-                                        .Select(s => s.Name)
-                                        .ToListAsync();
-
-            // Return a customized response
-            var response = new
+            // Create new PersonSkills entries for each skill and level
+            person.PersonSkills = person.SkillLevels.Select(sl => new PersonSkill
             {
-                Id = person.Id,
-                Name = person.Name,
-                Workplace = workplace.Name,  // Workplace name
-                Skills = skillNames          // List of skill names
-            };
+                PersonId = person.Id,
+                SkillId = sl.SkillId,
+                Level = sl.Level
+            }).ToList();
 
-            return CreatedAtAction(nameof(GetPerson), new { id = person.Id }, response);
+            // Add the person to the database
+            _context.Persons.Add(person);
+            _context.SaveChanges();
+
+            return Ok($"Person {person.Name} added successfully with {person.SkillLevels.Count} skills!");
         }
 
 
@@ -155,13 +151,13 @@ namespace PeopleSkillsApp.Controllers
             existingPerson.WorkplaceId = person.WorkplaceId;
 
             // Update skills if provided
-            if (person.SkillIds != null && person.SkillIds.Count > 0)
+            if (person.SkillLevels != null && person.SkillLevels.Count > 0)
             {
                 // Remove existing skills
                 _context.PersonSkills.RemoveRange(existingPerson.PersonSkills);
 
                 // Add new skills
-                foreach (var skillId in person.SkillIds)
+                foreach (var skillId in person.SkillLevels.Select(sl => sl.SkillId))
                 {
                     existingPerson.PersonSkills.Add(new PersonSkill { PersonId = existingPerson.Id, SkillId = skillId });
                 }
